@@ -1,0 +1,5 @@
+Description:
+    Generate GraphQL types, mutations, and input types from your rails models.
+
+Example:
+    rails generate gql:model_type model_type
