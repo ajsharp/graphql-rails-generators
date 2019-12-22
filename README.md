@@ -2,11 +2,12 @@
 
 A few generators to make it easy to integrate your Rails models with [graphql-ruby](https://github.com/rmosolgo/graphql-ruby). I created this because I was wasting too many keystrokes copying my model schema by hand to create graphql types.
 
-This project contains three generators that look at your ActiveRecord model schema and generates graphql types for you.
+This project contains generators that look at your ActiveRecord model schema and generates graphql types for you.
 
-* `gql:model_type Post` - Generate a graphql type for a model
-* `gql:input Post` - Generate a graphql input type for a model
-* `gql:mutation Update Post` - Generate a graphql mutation class for a model
+- `gql:model_type Post` - Generate a graphql type for a model
+- `gql:input Post` - Generate a graphql input type for a model
+- `gql:mutation Update Post` - Generate a graphql mutation class for a model
+- `gql:search_object` - A search object based on [SearchObjectGraphQL](https://github.com/RStankov/SearchObjectGraphQL)
 
 ## Installation
 
@@ -52,6 +53,7 @@ rails generate gql:input Post
 ```
 
 Result:
+
 ```ruby
 # app/graphql/types/post_input.rb
 module Types
@@ -77,6 +79,7 @@ rails generate gql:mutation Update Post
 ```
 
 Result:
+
 ```ruby
 # app/graphql/mutations/update_post.rb
 module Mutations
@@ -105,4 +108,66 @@ module Mutations
     end
   end
 end
+```
+
+### gql:search_object MODEL_NAME
+
+Generate a search object from a model using [SearchObjectGraphQL](https://github.com/RStankov/SearchObjectGraphQL)
+
+If you have not yet created a base search resolver:
+
+`rails g gql:model_search_base`
+
+\*_Adds `gem 'search_object_graphql'` to gemfile_
+
+result:
+
+```ruby
+# app/graphql/resolvers/base_search_resolver.rb
+module Resolvers
+  class BaseSearchResolver < GraphQL::Schema::Resolver
+    require 'search_object'
+    require 'search_object/plugin/graphql'
+    include SearchObject.module(:graphql)
+  end
+end
+```
+
+Then generate a search object for your model:
+
+`rails g gql:model_search Post`
+
+result:
+
+```ruby
+# app/graphql/resolvers/post_search.rb
+module Resolvers
+  class PostSearch < Resolvers::BaseSearchResolver
+    type [Types::PostType], null: false
+    description "Lists posts"
+
+    scope { Post.all }
+
+    option(:id, type: Int)   { |scope, value| scope.where id: value }
+    option(:title, type: String)   { |scope, value| scope.where title: value }
+    option(:body, type: Int)   { |scope, value| scope.where rating: value }
+    option(:created_at, type: GraphQL::Types::ISO8601DateTime)   { |scope, value| scope.where created_at: value }
+    option(:updated_at, type: GraphQL::Types::ISO8601DateTime)   { |scope, value| scope.where updated_at: value }
+
+    def resolve
+      []
+    end
+
+  end
+end
+```
+
+This will also insert a search field into the beginning of query_type.rb
+
+```ruby
+  #app/graphql/types/query_type.rb
+  module Types
+  class QueryType < Types::BaseObject
+    field :posts, resolver: Resolvers::PostSearch
+    ...
 ```
