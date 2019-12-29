@@ -1,5 +1,5 @@
 module Mutations
-  class <%= @mutation_prefix %><%= @model_name %> < Mutations::BaseMutation
+  class <%= prefixed_class_name %> < Mutations::BaseMutation
     field :<%= singular_name %>, Types::<%= @model_name %>Type, null: true
 
     argument :attributes, Types::Input::<%= @model_name %>Input, required: true
