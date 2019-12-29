@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.version     = GraphqlRailsGenerators::VERSION
   s.platform    = Gem::Platform::RUBY
   s.date        = '2019-11-26'
-  s.summary     = "Hola!"
-  s.description = "A simple hello world gem"
+  s.summary     = "Rails graphql generators"
+  s.description = "Rails graphql generators"
   s.authors     = ["Alex Sharp"]
   s.email       = 'ajsharp@gmail.com'
   s.files       = Dir["{lib}/**/*.rb", "LICENSE", "*.md"]
