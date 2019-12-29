@@ -1,12 +1,21 @@
+require "rails/generators/named_base"
+
 module Gql
-  class MutationGenerator < Rails::Generators::Base
+  class MutationGenerator < Rails::Generators::NamedBase
+    remove_argument :name # remove name base default arg
+
     argument :mutation_prefix, type: :string
     argument :model_name, type: :string
     source_root File.expand_path('../templates', __FILE__)
+
+    # hack to keep NamedBase helpers working
+    def name
+      model_name
+    end
   
     def mutation
-      file_name = "#{mutation_prefix}#{model_name}"
-      template('model_mutation.rb', "app/graphql/mutations/#{file_name.underscore}.rb")
+      file_name = "#{mutation_prefix}_#{singular_name}"
+      template('model_mutation.rb', "app/graphql/mutations/#{class_path.join('/')}/#{file_name.underscore}.rb")
     end
   end
   

@@ -1,6 +1,6 @@
 module Mutations
   class <%= @mutation_prefix %><%= @model_name %> < Mutations::BaseMutation
-    field :<%= @model_name.underscore %>, Types::<%= @model_name %>Type, null: true
+    field :<%= singular_name %>, Types::<%= @model_name %>Type, null: true
 
     argument :attributes, Types::Input::<%= @model_name %>Input, required: true
     argument :id, Int, required: false
@@ -9,7 +9,7 @@ module Mutations
       model = find_or_build_model(id)
       model.attributes = attributes.to_h
       if model.save
-        {<%= @model_name.underscore %>: model}
+        {<%= singular_name %>: model}
       else
         {errors: model.errors.full_messages}
       end
