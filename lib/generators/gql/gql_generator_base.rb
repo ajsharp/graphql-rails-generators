@@ -1,11 +1,17 @@
 require 'rails/generators/base'
-# require 'active_support/extend'
+
 module Gql
   module GqlGeneratorBase
     extend ActiveSupport::Concern
 
     included do
       protected
+
+      # Generate a namedspaced class name with the mutation prefix
+      def prefixed_class_name(prefix)
+        (class_path + ["#{prefix}_#{file_name}"]).map!(&:camelize).join("::")
+      end
+
       def type_map
         {
           integer: 'Int',

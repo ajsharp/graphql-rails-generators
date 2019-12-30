@@ -64,6 +64,27 @@ module Types
 end
 ```
 
+### gql:mutations MODEL_CLASS
+
+Generate create, update and delete mutations for a model.
+
+```
+rails generate gql:mutations Post
+```
+
+Result:
+```ruby
+# app/graphql/types/post_input.rb
+module Types
+  module Input
+    class PostInput < Types::BaseInputObject
+      argument :title, String, required: false
+      argument :body, String, required: false
+    end
+  end
+end
+```
+
 ### gql:mutation MUTATION_PREFIX MODEL_NAME
 
 Generate a mutation class from a model.
