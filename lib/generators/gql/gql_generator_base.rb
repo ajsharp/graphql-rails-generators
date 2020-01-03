@@ -14,7 +14,8 @@ module Gql
           decimal: 'Float',
           datetime: 'GraphQL::Types::ISO8601DateTime',
           date: 'GraphQL::Types::ISO8601Date',
-          hstore: 'GraphQL::Types::JSON'
+          hstore: 'GraphQL::Types::JSON',
+          text: 'String'
         }
       end
   
