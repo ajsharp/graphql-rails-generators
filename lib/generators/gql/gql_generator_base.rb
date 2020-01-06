@@ -21,7 +21,8 @@ module Gql
           datetime: 'GraphQL::Types::ISO8601DateTime',
           date: 'GraphQL::Types::ISO8601Date',
           hstore: 'GraphQL::Types::JSON',
-          text: 'String'
+          text: 'String',
+          json: 'GraphQL::Types::JSON'
         }
       end
   
@@ -32,7 +33,8 @@ module Gql
   
         klass.columns
           .reject { |col| bt_columns.include?(col.name) }
-          .map { |col| {name: col.name, gql_type: type_map.fetch(col.type)} }
+          .reject { |col| type_map[col.type].nil? }
+          .map { |col| {name: col.name, gql_type: type_map[col.type]} }
       end
     end
   end
