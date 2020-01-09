@@ -1,5 +1,5 @@
 module Mutations
-  class <%= prefixed_class_name %> < Mutations::BaseMutation
+  class <%= prefixed_class_name(mutation_prefix) %> < Mutations::BaseMutation
     field :<%= singular_name %>, Types::<%= @model_name %>Type, null: true
 
     argument :attributes, Types::Input::<%= @model_name %>Input, required: true
@@ -8,6 +8,7 @@ module Mutations
     def resolve(attributes:, id: nil)
       model = find_or_build_model(id)
       model.attributes = attributes.to_h
+
       if model.save
         {<%= singular_name %>: model}
       else
