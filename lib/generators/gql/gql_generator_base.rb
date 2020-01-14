@@ -37,5 +37,33 @@ module Gql
           .map { |col| {name: col.name, gql_type: type_map[col.type]} }
       end
     end
+
+    def root_directory(namespace)
+      "app/graphql/#{namespace.underscore}"
+    end
+
+    def wrap_in_namespace(namespace)
+      namespace = namespace.split('::')
+      namespace.shift if namespace[0].empty?
+
+      code = namespace.each_with_index.map { |name, i| "  " * i + "module #{name}" }.join("\n")
+      code << "\n" << yield(namespace.size) << "\n"
+      code << (namespace.size - 1).downto(0).map { |i| "  " * i  + "end" }.join("\n")
+      code
+    end
+
+    def class_with_fields(namespace, name, superclass, fields)
+      wrap_in_namespace(namespace) do |indent|
+        klass = []
+        klass << sprintf("%sclass %s < %s", "  " * indent, name, superclass)
+
+        fields.each do |field|
+          klass << sprintf("%sfield :%s, %s, null: true", "  " * (indent + 1), field[:name], field[:gql_type])
+        end
+
+        klass << sprintf("%send", "  " * indent)
+        klass.join("\n")
+      end
+    end
   end
 end
