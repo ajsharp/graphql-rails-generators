@@ -19,7 +19,8 @@ module Gql
         date: 'GraphQL::Types::ISO8601Date',
         hstore: 'GraphQL::Types::JSON',
         text: 'String',
-        json: 'GraphQL::Types::JSON'
+        json: 'GraphQL::Types::JSON',
+        jsonb: 'GraphQL::Types::JSON'
       }
     end
 
