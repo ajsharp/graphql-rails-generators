@@ -3,15 +3,29 @@ module Gql
   class InputGenerator < Rails::Generators::Base
     include GqlGeneratorBase
     source_root File.expand_path('../templates', __FILE__)
+
     argument :model_name, type: :string
-  
+
+    class_option :name, type: :string
+    class_option :include_columns, type: :array, default: []
+    class_option :superclass, type: :string, default: 'Types::BaseInputObject'
+    class_option :namespace, type: :string, default: 'Types::Input'
+
     def generate_input_type
-      file_name = model_name
+      name = options['name'] || model_name
+      superclass = options['superclass']
 
       ignore = ['id', 'created_at', 'updated_at']
-      @fields = map_model_types(model_name).reject { |field| ignore.include?(field[:name]) }
+      fields = map_model_types(model_name)
+      fields.reject! { |field| ignore.include?(field[:name]) }
+      if options['include_columns'].any?
+        fields.reject! { |field| !options['include_columns'].include?(field[:name]) }
+      end
 
-      template('input_type.rb', "app/graphql/types/input/#{file_name.underscore}_input.rb")
+      code = class_with_fields(options['namespace'], name, superclass, fields)
+      file_name = File.join(root_directory(options['namespace']), "#{name.underscore}_input.rb")
+
+      create_file file_name, code
     end
   end
 end
