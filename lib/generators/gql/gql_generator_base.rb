@@ -31,7 +31,13 @@ module Gql
       klass.columns
         .reject { |col| bt_columns.include?(col.name) }
         .reject { |col| type_map[col.type].nil? }
-        .map { |col| {name: col.name, gql_type: type_map[col.type]} }
+        .map do |col|
+          {
+            name: col.name,
+            null: col.null,
+            gql_type: klass.primary_key == col.name ? 'GraphQL::Types::ID' : type_map[col.type]
+          }
+        end
     end
 
     def root_directory(namespace)
@@ -54,7 +60,7 @@ module Gql
         klass << sprintf("%sclass %s < %s", "  " * indent, name, superclass)
 
         fields.each do |field|
-          klass << sprintf("%sfield :%s, %s, null: true", "  " * (indent + 1), field[:name], field[:gql_type])
+          klass << sprintf("%sfield :%s, %s, null: %s", "  " * (indent + 1), field[:name], field[:gql_type], field[:null])
         end
 
         klass << sprintf("%send", "  " * indent)
