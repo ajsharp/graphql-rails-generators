@@ -12,7 +12,7 @@ module Gql
     class_option :namespace, type: :string, default: 'Types::Input'
 
     def generate_input_type
-      name = options['name'] || model_name
+      name = options['name'].nil? ? "#{model_name}Input" : options['name']
       superclass = options['superclass']
 
       ignore = ['id', 'created_at', 'updated_at']
@@ -23,7 +23,7 @@ module Gql
       end
 
       code = class_with_fields(options['namespace'], name, superclass, fields)
-      file_name = File.join(root_directory(options['namespace']), "#{name.underscore}_input.rb")
+      file_name = File.join(root_directory(options['namespace']), "#{name.underscore}.rb")
 
       create_file file_name, code
     end

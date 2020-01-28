@@ -12,7 +12,7 @@ module Gql
     class_option :namespace, type: :string, default: 'Types'
 
     def type
-      name = options['name'] || model_name
+      name = options['name'].nil? ? "#{model_name}Type" : options['name']
 
       superclass = options['superclass']
 
@@ -22,7 +22,7 @@ module Gql
       end
 
       code = class_with_fields(options['namespace'], name, superclass, fields)
-      file_name = File.join(root_directory(options['namespace']), "#{name.underscore}_type.rb")
+      file_name = File.join(root_directory(options['namespace']), "#{name.underscore}.rb")
 
       create_file file_name, code
     end
