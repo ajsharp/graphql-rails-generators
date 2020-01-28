@@ -29,7 +29,11 @@ Generate a model type from a model.
 $ rails generate gql:model_type MODEL_CLASS
 ```
 
-Result:
+#### Options
+
+* `--name` - customize the file/class name, useful if you don't want the default Type suffix.
+
+#### Example
 
 ```ruby
 # app/graphql/post_type.rb
@@ -52,7 +56,11 @@ Generate an input type from a model.
 rails generate gql:input Post
 ```
 
-Result:
+#### Options
+
+* `--name` - customize the file/class name, useful if you don't want the default Input suffix.
+
+#### Example
 
 ```ruby
 # app/graphql/types/post_input.rb
@@ -74,7 +82,8 @@ Generate create, update and delete mutations for a model.
 rails generate gql:mutations Post
 ```
 
-Result:
+#### Example
+
 ```ruby
 # app/graphql/types/post_input.rb
 module Types
@@ -99,7 +108,7 @@ The mutation generator generates something akin to an "upsert" mutation. It take
 rails generate gql:mutation Update Post
 ```
 
-Result:
+#### Example
 
 ```ruby
 # app/graphql/mutations/update_post.rb
@@ -141,7 +150,7 @@ If you have not yet created a base search resolver:
 
 \*_Adds `gem 'search_object_graphql'` to gemfile_
 
-result:
+#### Example
 
 ```ruby
 # app/graphql/resolvers/base_search_resolver.rb
@@ -158,7 +167,7 @@ Then generate a search object for your model:
 
 `rails g gql:model_search Post`
 
-result:
+#### Example
 
 ```ruby
 # app/graphql/resolvers/post_search.rb
