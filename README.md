@@ -31,7 +31,7 @@ $ rails generate gql:model_type MODEL_CLASS
 
 #### Options
 
-* `--name` - customize the file/class name, useful if you don't want the default Type suffix.
+- `--name` - customize the file/class name, useful if you don't want the default Type suffix.
 
 #### Example
 
@@ -39,7 +39,7 @@ $ rails generate gql:model_type MODEL_CLASS
 # app/graphql/post_type.rb
 module Types
   class PostType < Types::BaseObject
-    field :id, Int, null: true
+    field :id, GraphQL::Types::ID, null: true
     field :title, String, null: true
     field :body, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
@@ -58,7 +58,7 @@ rails generate gql:input Post
 
 #### Options
 
-* `--name` - customize the file/class name, useful if you don't want the default Input suffix.
+- `--name` - customize the file/class name, useful if you don't want the default Input suffix.
 
 #### Example
 
@@ -117,7 +117,7 @@ module Mutations
     field :post, Types::PostType, null: true
 
     argument :attributes, Types::Input::PostInput, required: true
-    argument :id, Int, required: false
+    argument :id, GraphQL::Types::ID, required: false
 
     def resolve(attributes:, id: nil)
       model = find_or_build_model(id)

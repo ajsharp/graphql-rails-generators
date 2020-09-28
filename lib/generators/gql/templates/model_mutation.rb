@@ -3,7 +3,7 @@ module Mutations
     field :<%= singular_name %>, Types::<%= @model_name %>Type, null: true
 
     argument :attributes, Types::Input::<%= @model_name %>Input, required: true
-    argument :id, Int, required: false
+    argument :id, GraphQL::Types::ID, required: false
 
     def resolve(attributes:, id: nil)
       model = find_or_build_model(id)
