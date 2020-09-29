@@ -5,7 +5,7 @@ module Mutations
     argument :attributes, Types::Input::<%= name %>Input, required: true
 
     def resolve(attributes:)
-      model = <%= name %>.new(attributes.to_h)
+      model = <%= class_name %>.new(attributes.to_h)
 
       if model.save
         {<%= singular_name %>: model}
