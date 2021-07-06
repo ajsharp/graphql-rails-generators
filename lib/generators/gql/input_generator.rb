@@ -22,7 +22,7 @@ module Gql
         fields.reject! { |field| !options['include_columns'].include?(field[:name]) }
       end
 
-      code = class_with_fields(options['namespace'], name, superclass, fields)
+      code = class_with_arguments(options['namespace'], name, superclass, fields)
       file_name = File.join(root_directory(options['namespace']), "#{name.underscore}.rb")
 
       create_file file_name, code
