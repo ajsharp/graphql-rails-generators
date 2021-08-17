@@ -68,5 +68,19 @@ module Gql
         klass.join("\n")
       end
     end
+
+    def class_with_arguments(namespace, name, superclass, fields)
+      wrap_in_namespace(namespace) do |indent|
+        klass = []
+        klass << sprintf("%sclass %s < %s", "  " * indent, name, superclass)
+
+        fields.each do |field|
+          klass << sprintf("%sargument :%s, %s, required: %s", "  " * (indent + 1), field[:name], field[:gql_type], !field[:null])
+        end
+
+        klass << sprintf("%send", "  " * indent)
+        klass.join("\n")
+      end
+    end
   end
 end
